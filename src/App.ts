@@ -4,6 +4,8 @@ import helmet from 'helmet'
 import rateLimit from 'express-rate-limit'
 import compression from 'compression'
 import cookieparser from 'cookie-parser'
+import authRouter from 'routes/auth.router'
+import productRouter from 'routes/product.router'
 const app = express()
 
 app.use(express.json())
