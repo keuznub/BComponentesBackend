@@ -17,29 +17,67 @@ model Product{
   id Int @id @unique @default(autoincrement())
   name String
   description String?
+  image Bytes
   price Float
+  discount Float
   createdAt DateTime @default(now())
-  updatedAt DateTime
-  orders Order[]
+  updatedAt DateTime @updatedAt
+  idCategory Int?
+  category Category? @relation(fields: [idCategory],references: [id])
+  orders OrderProduct[]
+  rates Rate[]
 }
 
 model User{
   id Int @id @unique @default(autoincrement())
-  name String
-  email String @unique
+  username String
   password String
+  email String @unique
+  role String?
+  orders Order[]
+  rates Rate[]
   createdAt DateTime @default(now())
-  updatedAt DateTime
-  order Order[]
+  updatedAt DateTime @updatedAt
+  
 }
 
 model Order{
   id Int @id @unique @default(autoincrement())
+  idUser Int 
+  user User @relation(fields: [idUser],references: [id])
+  status String
+  products OrderProduct[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category{
+  id Int @id @unique @default(autoincrement())
+  name String 
+  products Product[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Rate{
+  id Int @id @unique @default(autoincrement())
+  idUser Int
+  user User @relation(fields: [idUser], references: [id])
   idProduct Int
   product Product @relation(fields: [idProduct], references: [id])
-  idUser Int
-  user User @relation(fields: [idUser],references: [id])
+  opinion String?
+  value Int
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
+}
+
+model OrderProduct{
+  idProduct Int 
+  product Product @relation(fields: [idProduct], references: [id])
+  idOrder Int
+  order Order @relation(fields: [idOrder],references: [id])
+  Quantity Int
+  @@id([idProduct,idOrder])
+
 }
 

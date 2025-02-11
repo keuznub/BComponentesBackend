@@ -11,27 +11,18 @@ const TOKEN_PASSWORD = process.env.TOKEN_PASSWORD || "pass"
 export class AuthService{
 
     static async register(user: User){
-        const findUser = await prisma.user.findUnique({
-            where:{
-                email:user.email
-            }
-        })
-        
-        if(findUser) throw new HttpExpection(409,"User already exists")
-
+        const findUser = await prisma.user.findUnique({where:{email:user.email}})
+        if(findUser) throw new HttpExpection(409,`User ${user.email} already exists`)
         const encryptedPassword = await bcrypt.hash(user.password,10)
-        
+        user.password = ''
         return prisma.user.create({
             data:{
-                ...user, password:encryptedPassword
+                ...user, password:encryptedPassword, role:null
             },
             omit:{
                 password: true
             } 
         })
-        
-
-
     }
 
     static async login(user: User){
