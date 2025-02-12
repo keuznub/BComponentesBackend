@@ -1,5 +1,5 @@
 import { PrismaClient, User } from "@prisma/client";
-import { HttpExpection } from "../exceptions/HttpsException";
+import { HttpException } from "../exceptions/httpException";
 import bcrypt from 'bcrypt'
 import { sign } from "crypto";
 import jwt from "jsonwebtoken";
@@ -11,8 +11,13 @@ const TOKEN_PASSWORD = process.env.TOKEN_PASSWORD || "pass"
 export class AuthService{
 
     static async register(user: User){
-        const findUser = await prisma.user.findUnique({where:{email:user.email}})
-        if(findUser) throw new HttpExpection(409,`User ${user.email} already exists`)
+        const {email,username} = user
+        const findUserEmail = await prisma.user.findUnique({where:{email}})
+        if(findUserEmail) throw new HttpException(409,`Email ${user.email} already exists`)
+        const findUser = await prisma.user.findUnique({where:{username}})
+        if(findUser) throw new HttpException(409,`Username ${user.username} already exists`)
+
+
         const encryptedPassword = await bcrypt.hash(user.password,10)
         user.password = ''
         return prisma.user.create({
@@ -27,16 +32,15 @@ export class AuthService{
 
     static async login(user: User){
         
-        const {email, password} = user
-        const findUser = await prisma.user.findUnique({where:{email}})
-
-        if(!findUser) throw new HttpExpection(404,"User not found")
+        const {username,email,password} = user
+        const  findUser = email ? await prisma.user.findUnique({where:{email}}) : await prisma.user.findUnique({where:{username}})  
+        if(!findUser) throw new HttpException(404,"User not found")
 
         const rightPasword =  bcrypt.compare(password,findUser.password)
 
-        if(!rightPasword) throw new HttpExpection(401,"Incorrect Password")
+        if(!rightPasword) throw new HttpException(401,"Incorrect Password")
         
-        const token = jwt.sign({id:user.id, email:user.email}, TOKEN_PASSWORD, {expiresIn:"1h"})
+        return jwt.sign({id:findUser.id, role:findUser.role}, TOKEN_PASSWORD, {expiresIn:"1h"})
         
         
     }

@@ -1,14 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthService } from "../services/auth.service";
-import cookieParser from "cookie-parser";
 
-export default  class AuthController{
+export default class AuthController{
 
     static async register(req: Request, res:Response, next:NextFunction) {
         try{
         const userData = req.body
         const newUser = await AuthService.register(userData)
-        res.status(201).json({message:"Register succesfully",user:newUser})
+        res.status(201).json({message:"User register succesfully",user:newUser})
         }catch(error){
             next(error)
         }
@@ -23,6 +22,7 @@ export default  class AuthController{
             res.cookie('token',token, {
                 maxAge:60*60*1000,
                 httpOnly:true,
+                secure:false,
                 sameSite:"strict"
             })
             res.status(201).json({message:"Login sucessfully",token})
