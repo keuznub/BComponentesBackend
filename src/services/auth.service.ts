@@ -36,8 +36,8 @@ export class AuthService{
         const  findUser = email ? await prisma.user.findUnique({where:{email}}) : await prisma.user.findUnique({where:{username}})  
         if(!findUser) throw new HttpException(404,"User not found")
 
-        const rightPasword =  bcrypt.compare(password,findUser.password)
-
+        const rightPasword =  await bcrypt.compare(password,findUser.password)
+    
         if(!rightPasword) throw new HttpException(401,"Incorrect Password")
         
         return jwt.sign({id:findUser.id, role:findUser.role}, TOKEN_PASSWORD, {expiresIn:"1h"})
