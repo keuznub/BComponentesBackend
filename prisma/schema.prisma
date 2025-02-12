@@ -46,7 +46,7 @@ model Order{
   idUser Int 
   user User @relation(fields: [idUser],references: [id])
   status String
-  products OrderProduct[]
+  orderProducts OrderProduct[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -76,7 +76,7 @@ model OrderProduct{
   product Product @relation(fields: [idProduct], references: [id])
   idOrder Int
   order Order @relation(fields: [idOrder],references: [id])
-  Quantity Int
+  quantity Int
   @@id([idProduct,idOrder])
 
 }
