@@ -1,7 +1,8 @@
 import { NextFunction,  Request, Response } from "express"
-import { validate } from "express-validation"
+import {CustomJwtPayload} from '../utils/CustomJwtPayload'
 import { HttpException} from '../exceptions/httpException'
 import jwt from 'jsonwebtoken'
+import { SourceTextModule } from "vm"
 
 const TOKEN_PASSWORD = process.env.TOKEN_PASSWORD || "pass"
 
@@ -11,7 +12,7 @@ export function isAuthenticate(req:Request, res:Response, next:NextFunction){
     if(!tokenReceived) next(new HttpException(403, "Access Denied"))
     try{
         const tokenDecodificado = jwt.verify(tokenReceived,TOKEN_PASSWORD)
-        req.body.user = tokenDecodificado
+        req.user = tokenDecodificado as CustomJwtPayload
         next()
     }catch(error){
         next(error)

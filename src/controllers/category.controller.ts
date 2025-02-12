@@ -1,13 +1,13 @@
 import { NextFunction, Request,Response } from "express"
-import { ProductService } from "../services/product.service"
+import { CategoryService } from "../services/category.service"
 import { HttpException } from "../exceptions/httpException"
 
-export class ProductController{
+export class CategoryController{
 
     static async getAll(req: Request, res:Response, next:NextFunction){
         try{
-            const products = await ProductService.getAll()
-            res.status(201).json(products)
+            const categories = await CategoryService.getAll()
+            res.status(201).json(categories)
         }catch(error){
             next(error)
         }
@@ -17,8 +17,8 @@ export class ProductController{
         try{
             const id = Number.parseInt(req.params.id)
             if(isNaN(id)) throw new HttpException(400,"Bad request")
-            const product = await ProductService.getById(id)
-            res.status(201).json(product)
+            const category = await CategoryService.getById(id)
+            res.status(201).json(category)
         }catch(error){
             next(error)
         }
@@ -26,8 +26,8 @@ export class ProductController{
 
     static async save(req: Request, res:Response, next:NextFunction){
         try{
-            const product = req.body
-            const result = await ProductService.save(product)
+            const category = req.body
+            const result = await CategoryService.save(category)
             res.status(201).json(result)
         }catch(error){
             next(error)
@@ -38,7 +38,7 @@ export class ProductController{
         try{
             const id = Number.parseInt(req.params.id)
             if(isNaN(id)) throw new HttpException(400,"Bad request")
-            const result = await ProductService.delete(id)
+            const result = await CategoryService.delete(id)
             res.status(201).json(result)
         }catch(error){
             next(error)
@@ -51,7 +51,7 @@ export class ProductController{
             if(isNaN(id)) throw new HttpException(400,"Bad request")
             const product = req.body
             product.id = id
-            const result = await ProductService.update(product)
+            const result = await CategoryService.update(product)
             res.status(201).json(result)
         }catch(error){
             next(error)

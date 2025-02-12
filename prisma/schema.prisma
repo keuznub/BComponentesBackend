@@ -60,7 +60,6 @@ model Category{
 }
 
 model Rate{
-  id Int @id @unique @default(autoincrement())
   idUser Int
   user User @relation(fields: [idUser], references: [id])
   idProduct Int
@@ -69,6 +68,7 @@ model Rate{
   value Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@id([idUser,idProduct])
 }
 
 model OrderProduct{

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthService } from "../services/auth.service";
 
+
 export default class AuthController{
 
     static async register(req: Request, res:Response, next:NextFunction) {
@@ -26,6 +27,20 @@ export default class AuthController{
                 sameSite:"strict"
             })
             res.status(201).json({message:"Login sucessfully",token})
+            }catch(error){
+                next(error)
+            }
+
+    }
+
+    static async logout(req: Request, res:Response, next:NextFunction){
+        try{
+            res.clearCookie('token', {
+                httpOnly:true,
+                secure:false,
+                sameSite:"strict"
+            })
+            res.status(201).json({message:"Logout sucessfully"})
             }catch(error){
                 next(error)
             }
