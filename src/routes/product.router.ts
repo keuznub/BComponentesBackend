@@ -10,6 +10,6 @@ router.get("/",isAuthenticate, ProductController.getAll)
 router.get("/:id",isAuthenticate, ProductController.getByID)
 router.post("/",isAuthenticate,isAdmin, ProductController.save)
 router.delete("/:id",isAuthenticate,isAdmin, ProductController.delete)
-router.put("/:id",isAuthenticate,isAdmin, ProductController.save)
+router.put("/:id",isAuthenticate,isAdmin, ProductController.update)
 
 export default router

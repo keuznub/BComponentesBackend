@@ -5,13 +5,13 @@ const prisma = new PrismaClient()
 export class ProductService{
     
     static async getAll(){
-        const findProducts = await prisma.product.findMany()
+        const findProducts = await prisma.product.findMany({include:{rates:true}})
         if(!findProducts) throw new HttpException(404,"Products not found")
         return findProducts
     }
 
     static async getById(id: number){
-        const findProduct = await prisma.product.findUnique({where:{id}})
+        const findProduct = await prisma.product.findUnique({where:{id},include:{rates:{include:{user:true}}}})
         if(!findProduct) throw new HttpException(404,"Product not found")
         return findProduct
     }

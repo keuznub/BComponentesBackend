@@ -17,7 +17,7 @@ model Product{
   id Int @id @unique @default(autoincrement())
   name String
   description String?
-  image Bytes
+  image String
   price Float
   discount Float
   createdAt DateTime @default(now())
@@ -54,6 +54,7 @@ model Order{
 model Category{
   id Int @id @unique @default(autoincrement())
   name String 
+  color String?
   products Product[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

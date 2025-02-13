@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { urlencoded } from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import rateLimit from 'express-rate-limit'
@@ -12,11 +12,12 @@ import orderRouter from 'routes/order.router'
 
 const app = express()
 
-app.use(express.json())
+app.use(express.json({limit:'50mb'}))
+app.use(urlencoded({limit:'50mb', extended:true}))
 app.use(helmet())
 app.use(compression())
 app.use(cookieparser())
-app.use(rateLimit({max:100,windowMs:1000*15*60}))
+app.use(rateLimit({max:1000,windowMs:1000*15*60}))
 app.use(cors({
     origin: ['http://localhost:5173'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],

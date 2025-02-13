@@ -22,6 +22,16 @@ export class RateService{
         return findRate
     }
 
+    static async getAvgByProductId(idProduct: number){
+        const findRate = await prisma.rate.aggregate({
+            where:{idProduct},
+            _avg:{value:true},
+        })
+        if(!findRate) throw new HttpException(404,`Rates of product ${idProduct} not found`)
+        
+        return findRate._avg
+    }
+
     static async getByIds(idUser: number, idProduct:number){
         const findRate = await prisma.rate.findUnique({where:{idUser_idProduct:{idUser,idProduct}}})
         if(!findRate) throw new HttpException(404,`Rate not found`)

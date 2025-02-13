@@ -7,7 +7,7 @@ import {isAdmin} from '../middlewares/isAdmin.middleware'
 const router = Router()
 
 router.get("/",isAuthenticate, RateController.getAll)
-router.get("/:id",isAuthenticate, RateController.getByProductID)
+router.get("/:id",isAuthenticate, RateController.getAvgByProductId)
 router.put("/",isAuthenticate, RateController.save)
 router.post("/",isAuthenticate, RateController.save)
 router.delete("/:id",isAuthenticate, RateController.delete)

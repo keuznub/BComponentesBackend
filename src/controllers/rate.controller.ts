@@ -13,7 +13,7 @@ export class RateController{
         }
     }
 
-    static async getByProductID(req: Request, res:Response, next:NextFunction){
+    static async getByProductId(req: Request, res:Response, next:NextFunction){
         try{
             const id = req.body
             const rate = await RateService.getByProductId(id)
@@ -22,6 +22,17 @@ export class RateController{
             next(error)
         }
     }
+
+    static async getAvgByProductId(req: Request, res:Response, next:NextFunction){
+        try{
+            const id = req.body
+            const rate = await RateService.getAvgByProductId(id)
+            res.status(201).json(rate)
+        }catch(error){
+            next(error)
+        }
+    }
+
 
     
     static async getByUserId(req: Request, res:Response, next:NextFunction){
