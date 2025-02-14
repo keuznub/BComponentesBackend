@@ -26,8 +26,9 @@ export class ProductController{
 
     static async save(req: Request, res:Response, next:NextFunction){
         try{
-            const product = req.body
-            const result = await ProductService.save(product)
+            const product = req.body.product
+            const categories = req.body.categories
+            const result = await ProductService.save(product,categories)
             res.status(201).json(result)
         }catch(error){
             next(error)
