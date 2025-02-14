@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthService } from "../services/auth.service";
+import { log } from "console";
+import jwt from "jsonwebtoken";
 
 
 export default class AuthController{
@@ -26,7 +28,10 @@ export default class AuthController{
                 secure:false,
                 sameSite:"strict"
             })
-            res.status(201).json({message:"Login sucessfully",token})
+            
+            const {id,role} = jwt.decode(token)
+    
+            res.status(201).json({message:"Login sucessfully",id,role})
             }catch(error){
                 next(error)
             }

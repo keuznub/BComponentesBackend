@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/utils/CustomJwtPayload.ts"],"sourcesContent":["import { JwtPayload } from \"jsonwebtoken\";\r\n\r\nexport interface CustomJwtPayload extends JwtPayload{\r\n    username?: string,\r\n    email?: string,\r\n    id: number,\r\n    role?: string\r\n}\r\n\r\n"],"names":[],"mappings":"AAEA,WAKC"}

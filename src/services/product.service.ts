@@ -19,8 +19,7 @@ export class ProductService{
 
 
     static async save(product: Product, categoriesId: number[]){        
-        return await prisma.product.create({data:{...product}})
-        return await prisma.product.create({data:{...product,categoryProduct:{createMany}}})
+        return await prisma.product.create({data:{...product,categoryProduct:{connect:{idCategory:categoriesId[0]}}}})
     }
 
     static async delete(id: number){
