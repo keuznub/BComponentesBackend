@@ -9,6 +9,7 @@ import productRouter from 'routes/product.router'
 import categoryRouter from 'routes/category.router'
 import rateRouter from 'routes/rate.router'
 import orderRouter from 'routes/order.router'
+import userRouter from 'routes/user.router'
 
 const app = express()
 
@@ -19,6 +20,7 @@ app.use(compression())
 app.use(cookieparser())
 app.use(rateLimit({max:100000,windowMs:1000*15*60}))
 app.use(cors({
+    //http://localhost:3000/api/register
     origin: ['http://localhost:5173'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
@@ -30,6 +32,7 @@ app.use("/api/products", productRouter)
 app.use("/api/categories", categoryRouter)
 app.use("/api/rates", rateRouter)
 app.use("/api/orders", orderRouter)
+app.use("/api/users", userRouter)
 
 
 

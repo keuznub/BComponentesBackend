@@ -33,6 +33,7 @@ model User{
   password String
   email String @unique
   role String?
+  image String? 
   orders Order[]
   rates Rate[]
   createdAt DateTime @default(now())
