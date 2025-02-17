@@ -169,9 +169,8 @@ function _ts_generator(thisArg, body) {
         };
     }
 }
-import { PrismaClient } from "@prisma/client";
 import { HttpException } from "../exceptions/httpException";
-var prisma = new PrismaClient();
+import { prisma } from 'database/adapter';
 export var CategoryService = /*#__PURE__*/ function() {
     "use strict";
     function CategoryService() {

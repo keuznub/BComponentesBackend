@@ -74,30 +74,6 @@ function _object_spread(target) {
     }
     return target;
 }
-function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
-    if (Object.getOwnPropertySymbols) {
-        var symbols = Object.getOwnPropertySymbols(object);
-        if (enumerableOnly) {
-            symbols = symbols.filter(function(sym) {
-                return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-            });
-        }
-        keys.push.apply(keys, symbols);
-    }
-    return keys;
-}
-function _object_spread_props(target, source) {
-    source = source != null ? source : {};
-    if (Object.getOwnPropertyDescriptors) {
-        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-        ownKeys(Object(source)).forEach(function(key) {
-            Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-        });
-    }
-    return target;
-}
 function _ts_generator(thisArg, body) {
     var f, y, t, g, _ = {
         label: 0,
@@ -194,65 +170,31 @@ function _ts_generator(thisArg, body) {
     }
 }
 import { HttpException } from "../exceptions/httpException";
-import bcrypt from 'bcrypt';
-import jwt from "jsonwebtoken";
 import { prisma } from 'database/adapter';
-var TOKEN_PASSWORD = process.env.TOKEN_PASSWORD || "pass";
-export var AuthService = /*#__PURE__*/ function() {
+export var UserService = /*#__PURE__*/ function() {
     "use strict";
-    function AuthService() {
-        _class_call_check(this, AuthService);
+    function UserService() {
+        _class_call_check(this, UserService);
     }
-    _create_class(AuthService, null, [
+    _create_class(UserService, null, [
         {
-            key: "register",
-            value: function register(user) {
+            key: "getAll",
+            value: function getAll() {
                 return _async_to_generator(function() {
-                    var email, username, findUserEmail, findUser, encryptedPassword;
+                    var findUsers;
                     return _ts_generator(this, function(_state) {
                         switch(_state.label){
                             case 0:
-                                email = user.email, username = user.username;
                                 return [
                                     4,
-                                    prisma.user.findUnique({
-                                        where: {
-                                            email: email
-                                        }
-                                    })
+                                    prisma.user.findMany()
                                 ];
                             case 1:
-                                findUserEmail = _state.sent();
-                                if (findUserEmail) throw new HttpException(409, "Email ".concat(user.email, " already exists"));
-                                return [
-                                    4,
-                                    prisma.user.findUnique({
-                                        where: {
-                                            username: username
-                                        }
-                                    })
-                                ];
-                            case 2:
-                                findUser = _state.sent();
-                                if (findUser) throw new HttpException(409, "Username ".concat(user.username, " already exists"));
-                                return [
-                                    4,
-                                    bcrypt.hash(user.password, 10)
-                                ];
-                            case 3:
-                                encryptedPassword = _state.sent();
-                                user.password = '';
+                                findUsers = _state.sent();
+                                if (!findUsers) throw new HttpException(404, "Users not found");
                                 return [
                                     2,
-                                    prisma.user.create({
-                                        data: _object_spread_props(_object_spread({}, user), {
-                                            password: encryptedPassword,
-                                            role: null
-                                        }),
-                                        omit: {
-                                            password: true
-                                        }
-                                    })
+                                    findUsers
                                 ];
                         }
                     });
@@ -260,62 +202,103 @@ export var AuthService = /*#__PURE__*/ function() {
             }
         },
         {
-            key: "login",
-            value: function login(user) {
+            key: "getById",
+            value: function getById(id) {
                 return _async_to_generator(function() {
-                    var username, email, password, findUser, _tmp, rightPasword;
+                    var findUser;
                     return _ts_generator(this, function(_state) {
                         switch(_state.label){
                             case 0:
-                                username = user.username, email = user.email, password = user.password;
-                                if (!email) return [
-                                    3,
-                                    2
-                                ];
                                 return [
                                     4,
                                     prisma.user.findUnique({
                                         where: {
-                                            email: email
+                                            id: id
                                         }
                                     })
                                 ];
                             case 1:
-                                _tmp = _state.sent();
+                                findUser = _state.sent();
+                                if (!findUser) throw new HttpException(404, "User not found");
                                 return [
-                                    3,
-                                    4
+                                    2,
+                                    findUser
                                 ];
-                            case 2:
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "delete",
+            value: function _delete(id) {
+                return _async_to_generator(function() {
+                    var findUser;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
                                 return [
                                     4,
                                     prisma.user.findUnique({
                                         where: {
-                                            username: username
+                                            id: id
                                         }
                                     })
                                 ];
-                            case 3:
-                                _tmp = _state.sent();
-                                _state.label = 4;
-                            case 4:
-                                findUser = _tmp;
+                            case 1:
+                                findUser = _state.sent();
                                 if (!findUser) throw new HttpException(404, "User not found");
                                 return [
                                     4,
-                                    bcrypt.compare(password, findUser.password)
+                                    prisma.user.delete({
+                                        where: {
+                                            id: id
+                                        }
+                                    })
                                 ];
-                            case 5:
-                                rightPasword = _state.sent();
-                                if (!rightPasword) throw new HttpException(401, "Incorrect Password");
+                            case 2:
                                 return [
                                     2,
-                                    jwt.sign({
-                                        id: findUser.id,
-                                        role: findUser.role
-                                    }, TOKEN_PASSWORD, {
-                                        expiresIn: "1h"
+                                    _state.sent()
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "update",
+            value: function update(user) {
+                return _async_to_generator(function() {
+                    var id, findUser;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                id = user.id;
+                                return [
+                                    4,
+                                    prisma.user.findUnique({
+                                        where: {
+                                            id: id
+                                        }
                                     })
+                                ];
+                            case 1:
+                                findUser = _state.sent();
+                                if (!findUser) throw new HttpException(404, "User not found");
+                                return [
+                                    4,
+                                    prisma.user.update({
+                                        where: {
+                                            id: id
+                                        },
+                                        data: _object_spread({}, user)
+                                    })
+                                ];
+                            case 2:
+                                return [
+                                    2,
+                                    _state.sent()
                                 ];
                         }
                     });
@@ -323,7 +306,7 @@ export var AuthService = /*#__PURE__*/ function() {
             }
         }
     ]);
-    return AuthService;
+    return UserService;
 }();
 
-//# sourceMappingURL=auth.service.js.map
+//# sourceMappingURL=user.service.js.map

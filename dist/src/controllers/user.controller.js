@@ -46,58 +46,6 @@ function _create_class(Constructor, protoProps, staticProps) {
     if (staticProps) _defineProperties(Constructor, staticProps);
     return Constructor;
 }
-function _define_property(obj, key, value) {
-    if (key in obj) {
-        Object.defineProperty(obj, key, {
-            value: value,
-            enumerable: true,
-            configurable: true,
-            writable: true
-        });
-    } else {
-        obj[key] = value;
-    }
-    return obj;
-}
-function _object_spread(target) {
-    for(var i = 1; i < arguments.length; i++){
-        var source = arguments[i] != null ? arguments[i] : {};
-        var ownKeys = Object.keys(source);
-        if (typeof Object.getOwnPropertySymbols === "function") {
-            ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function(sym) {
-                return Object.getOwnPropertyDescriptor(source, sym).enumerable;
-            }));
-        }
-        ownKeys.forEach(function(key) {
-            _define_property(target, key, source[key]);
-        });
-    }
-    return target;
-}
-function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
-    if (Object.getOwnPropertySymbols) {
-        var symbols = Object.getOwnPropertySymbols(object);
-        if (enumerableOnly) {
-            symbols = symbols.filter(function(sym) {
-                return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-            });
-        }
-        keys.push.apply(keys, symbols);
-    }
-    return keys;
-}
-function _object_spread_props(target, source) {
-    source = source != null ? source : {};
-    if (Object.getOwnPropertyDescriptors) {
-        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-        ownKeys(Object(source)).forEach(function(key) {
-            Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-        });
-    }
-    return target;
-}
 function _ts_generator(thisArg, body) {
     var f, y, t, g, _ = {
         label: 0,
@@ -194,65 +142,48 @@ function _ts_generator(thisArg, body) {
     }
 }
 import { HttpException } from "../exceptions/httpException";
-import bcrypt from 'bcrypt';
-import jwt from "jsonwebtoken";
-import { prisma } from 'database/adapter';
-var TOKEN_PASSWORD = process.env.TOKEN_PASSWORD || "pass";
-export var AuthService = /*#__PURE__*/ function() {
+import { UserService } from "../services/user.service";
+export var UserController = /*#__PURE__*/ function() {
     "use strict";
-    function AuthService() {
-        _class_call_check(this, AuthService);
+    function UserController() {
+        _class_call_check(this, UserController);
     }
-    _create_class(AuthService, null, [
+    _create_class(UserController, null, [
         {
-            key: "register",
-            value: function register(user) {
+            key: "getAll",
+            value: function getAll(req, res, next) {
                 return _async_to_generator(function() {
-                    var email, username, findUserEmail, findUser, encryptedPassword;
+                    var users, error;
                     return _ts_generator(this, function(_state) {
                         switch(_state.label){
                             case 0:
-                                email = user.email, username = user.username;
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
                                 return [
                                     4,
-                                    prisma.user.findUnique({
-                                        where: {
-                                            email: email
-                                        }
-                                    })
+                                    UserService.getAll()
                                 ];
                             case 1:
-                                findUserEmail = _state.sent();
-                                if (findUserEmail) throw new HttpException(409, "Email ".concat(user.email, " already exists"));
+                                users = _state.sent();
+                                res.status(201).json(users);
                                 return [
-                                    4,
-                                    prisma.user.findUnique({
-                                        where: {
-                                            username: username
-                                        }
-                                    })
+                                    3,
+                                    3
                                 ];
                             case 2:
-                                findUser = _state.sent();
-                                if (findUser) throw new HttpException(409, "Username ".concat(user.username, " already exists"));
+                                error = _state.sent();
+                                next(error);
                                 return [
-                                    4,
-                                    bcrypt.hash(user.password, 10)
+                                    3,
+                                    3
                                 ];
                             case 3:
-                                encryptedPassword = _state.sent();
-                                user.password = '';
                                 return [
-                                    2,
-                                    prisma.user.create({
-                                        data: _object_spread_props(_object_spread({}, user), {
-                                            password: encryptedPassword,
-                                            role: null
-                                        }),
-                                        omit: {
-                                            password: true
-                                        }
-                                    })
+                                    2
                                 ];
                         }
                     });
@@ -260,62 +191,130 @@ export var AuthService = /*#__PURE__*/ function() {
             }
         },
         {
-            key: "login",
-            value: function login(user) {
+            key: "getByID",
+            value: function getByID(req, res, next) {
                 return _async_to_generator(function() {
-                    var username, email, password, findUser, _tmp, rightPasword;
+                    var id, user, error;
                     return _ts_generator(this, function(_state) {
                         switch(_state.label){
                             case 0:
-                                username = user.username, email = user.email, password = user.password;
-                                if (!email) return [
-                                    3,
-                                    2
-                                ];
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                id = Number.parseInt(req.params.id);
+                                if (isNaN(id)) throw new HttpException(400, "Bad request");
                                 return [
                                     4,
-                                    prisma.user.findUnique({
-                                        where: {
-                                            email: email
-                                        }
-                                    })
+                                    UserService.getById(id)
                                 ];
                             case 1:
-                                _tmp = _state.sent();
+                                user = _state.sent();
+                                res.status(201).json(user);
                                 return [
                                     3,
-                                    4
+                                    3
                                 ];
                             case 2:
+                                error = _state.sent();
+                                next(error);
                                 return [
-                                    4,
-                                    prisma.user.findUnique({
-                                        where: {
-                                            username: username
-                                        }
-                                    })
+                                    3,
+                                    3
                                 ];
                             case 3:
-                                _tmp = _state.sent();
-                                _state.label = 4;
-                            case 4:
-                                findUser = _tmp;
-                                if (!findUser) throw new HttpException(404, "User not found");
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "delete",
+            value: function _delete(req, res, next) {
+                return _async_to_generator(function() {
+                    var id, result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                id = Number.parseInt(req.params.id);
+                                if (isNaN(id)) throw new HttpException(400, "Bad request");
                                 return [
                                     4,
-                                    bcrypt.compare(password, findUser.password)
+                                    UserService.delete(id)
                                 ];
-                            case 5:
-                                rightPasword = _state.sent();
-                                if (!rightPasword) throw new HttpException(401, "Incorrect Password");
+                            case 1:
+                                result = _state.sent();
+                                res.status(201).json(result);
                                 return [
+                                    3,
+                                    3
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                next(error);
+                                return [
+                                    3,
+                                    3
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "update",
+            value: function update(req, res, next) {
+                return _async_to_generator(function() {
+                    var id, user, result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
                                     2,
-                                    jwt.sign({
-                                        id: findUser.id,
-                                        role: findUser.role
-                                    }, TOKEN_PASSWORD, {
-                                        expiresIn: "1h"
-                                    })
+                                    ,
+                                    3
+                                ]);
+                                id = Number.parseInt(req.params.id);
+                                if (isNaN(id)) throw new HttpException(400, "Bad request");
+                                user = req.body;
+                                user.id = id;
+                                return [
+                                    4,
+                                    UserService.update(user)
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                res.status(201).json(result);
+                                return [
+                                    3,
+                                    3
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                next(error);
+                                return [
+                                    3,
+                                    3
+                                ];
+                            case 3:
+                                return [
+                                    2
                                 ];
                         }
                     });
@@ -323,7 +322,7 @@ export var AuthService = /*#__PURE__*/ function() {
             }
         }
     ]);
-    return AuthService;
+    return UserController;
 }();
 
-//# sourceMappingURL=auth.service.js.map
+//# sourceMappingURL=user.controller.js.map

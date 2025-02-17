@@ -1,12 +1,12 @@
 import { PrismaClient, Product  } from "@prisma/client"
 import { HttpException } from "../exceptions/httpException"
 import { create } from "domain"
-const prisma = new PrismaClient()
+import {prisma} from 'database/adapter'
 
 export class ProductService{
     
     static async getAll(){
-        const findProducts = await prisma.product.findMany({include:{rates:true,categoryProduct:true}})
+        const findProducts = await prisma.product.findMany({include:{rates:true,categoryProduct:{include:{category:true}}}})
         if(!findProducts) throw new HttpException(404,"Products not found")
         return findProducts
     }
@@ -19,7 +19,10 @@ export class ProductService{
 
 
     static async save(product: Product, categoriesId: number[]){        
-        return await prisma.product.create({data:{...product,categoryProduct:{connect:{idCategory:categoriesId[0]}}}})
+        return await prisma.product.create({data:{...product,
+            //categoryProduct: {create:[{category:{connect:{id:1}}}]}
+            categoryProduct: {create: categoriesId.map(id=>({category:{connect:{id}}}))}
+        }})
     }
 
     static async delete(id: number){

@@ -3,9 +3,8 @@ import { HttpException } from "../exceptions/httpException";
 import bcrypt from 'bcrypt'
 import { sign } from "crypto";
 import jwt from "jsonwebtoken";
+import {prisma} from 'database/adapter'
 
-
-const prisma = new PrismaClient()
 const TOKEN_PASSWORD = process.env.TOKEN_PASSWORD || "pass"
 
 export class AuthService{
