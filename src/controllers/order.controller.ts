@@ -28,6 +28,7 @@ export class OrderController{
     static async save(req: Request, res:Response, next:NextFunction){
         try{
             const orderProduct : OrderProduct[] = req.body
+            if(!req.user)return
             const idUser = req.user.id
             const result = await OrderService.save(orderProduct, idUser)
             res.status(201).json(result)

@@ -29,7 +29,7 @@ export default class AuthController{
                 sameSite:"strict"
             })
             
-            const {id,role} = jwt.decode(token)
+            const {id,role} : any = jwt.decode(token)
     
             res.status(201).json({message:"Login sucessfully",id,role})
             }catch(error){

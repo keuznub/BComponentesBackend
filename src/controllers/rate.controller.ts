@@ -37,6 +37,7 @@ export class RateController{
     
     static async getByUserId(req: Request, res:Response, next:NextFunction){
         try{
+            if(!req.user)return
             const id = req.user.id
             const rate = await RateService.getByUserId(id)
             res.status(201).json(rate)
@@ -47,6 +48,7 @@ export class RateController{
 
     static async getByIds(req: Request, res:Response, next:NextFunction){
         try{
+            if(!req.user)return
             const idProduct = req.body
             const idUser = req.user.id
             const rate = await RateService.getByIds(idUser,idProduct)
@@ -59,6 +61,7 @@ export class RateController{
     static async save(req: Request, res:Response, next:NextFunction){
         try{
             const rate = req.body
+            if(!req.user)return
             rate.idUser = req.user.id
             const result = await RateService.save(rate)
             res.status(201).json(result)
@@ -72,6 +75,7 @@ export class RateController{
     static async delete(req: Request, res:Response, next:NextFunction){
         try{
             const idProduct = req.body
+            if(!req.user)return
             const idUser = req.user.id
             const result = await RateService.delete(idUser,idProduct)
             res.status(201).json(result)

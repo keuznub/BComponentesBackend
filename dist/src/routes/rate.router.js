@@ -1,13 +1,22 @@
-import { Router } from "express";
-import { RateController } from "../controllers/rate.controller";
-import { isAuthenticate } from '../middlewares/auth.middleware';
-var router = Router();
-router.get("/", isAuthenticate, RateController.getAll);
-router.get("/:id", isAuthenticate, RateController.getAvgByProductId);
-router.put("/", isAuthenticate, RateController.save);
-router.post("/", isAuthenticate, RateController.save);
-router.delete("/:id", isAuthenticate, RateController.delete);
-//router.put("/:id",isAuthenticate, RateController.update)
-export default router;
+"use strict";
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "default", {
+    enumerable: true,
+    get: function() {
+        return _default;
+    }
+});
+const _express = require("express");
+const _ratecontroller = require("../controllers/rate.controller");
+const _authmiddleware = require("../middlewares/auth.middleware");
+const router = (0, _express.Router)();
+router.get("/", _authmiddleware.isAuthenticate, _ratecontroller.RateController.getAll);
+router.get("/:id", _authmiddleware.isAuthenticate, _ratecontroller.RateController.getAvgByProductId);
+router.put("/", _authmiddleware.isAuthenticate, _ratecontroller.RateController.save);
+router.post("/", _authmiddleware.isAuthenticate, _ratecontroller.RateController.save);
+router.delete("/:id", _authmiddleware.isAuthenticate, _ratecontroller.RateController.delete);
+const _default = router;
 
 //# sourceMappingURL=rate.router.js.map

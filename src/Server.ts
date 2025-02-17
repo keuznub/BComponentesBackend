@@ -1,4 +1,5 @@
-import app from "./App";
+
+import app from "./app";
 import { libsql } from "./database/adapter";
 import {ErrorMiddleware} from "./middlewares/error.middleware"
 app.use(ErrorMiddleware)

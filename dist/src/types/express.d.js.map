@@ -1,1 +1,1 @@
-{"version":3,"sources":["../../../src/types/express.d.ts"],"sourcesContent":["import { CustomJwtPayload } from \"../utils/CustomJwtPayload\"\r\n\r\ndeclare global{\r\n    namespace Express{\r\n        interface Request{\r\n            user?: CustomJwtPayload;\r\n        }\r\n    }\r\n}"],"names":[],"mappings":"AAAA,WAA4D"}
+{"version":3,"sources":["../../../src/types/express.d.ts"],"names":[],"mappings":""}
