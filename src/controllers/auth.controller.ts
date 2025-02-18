@@ -25,8 +25,9 @@ export default class AuthController{
             res.cookie('token',token, {
                 maxAge:60*60*1000*3,
                 httpOnly:true,
-                secure: process.env.COOKIE_SECURE?process.env.COOKIE_SECURE==="true":false,
-                sameSite:"none"
+                secure: true,
+                sameSite:"none",
+                domain:"desinterfaces-exercisebackend.onrender.com"
             })
             
             const {id,role} : any = jwt.decode(token)
@@ -40,11 +41,7 @@ export default class AuthController{
 
     static async logout(req: Request, res:Response, next:NextFunction){
         try{
-            res.clearCookie('token', {
-                httpOnly:true,
-                secure:false,
-                sameSite:"strict"
-            })
+            res.clearCookie('token')
             res.status(201).json({message:"Logout sucessfully"})
             }catch(error){
                 next(error)
