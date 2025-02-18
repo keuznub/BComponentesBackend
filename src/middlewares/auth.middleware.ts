@@ -1,8 +1,8 @@
 import { NextFunction,  Request, Response } from "express"
-import {CustomJwtPayload} from '../utils/CustomJwtPayload'
+import {CustomJwtPayload} from '../utils/customJwtPayload'
 import { HttpException} from '../exceptions/httpException'
 import jwt from 'jsonwebtoken'
-import { SourceTextModule } from "vm"
+
 
 const TOKEN_PASSWORD = process.env.TOKEN_PASSWORD || "pass"
 

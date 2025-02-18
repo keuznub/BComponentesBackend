@@ -20,8 +20,7 @@ app.use(compression())
 app.use(cookieparser())
 app.use(rateLimit({max:100000,windowMs:1000*15*60}))
 app.use(cors({
-    //http://localhost:3000/api/register
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173','https://desinterfaces-bcomponentesfront.onrender.com'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
