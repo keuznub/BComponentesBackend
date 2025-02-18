@@ -10,6 +10,7 @@ import categoryRouter from 'routes/category.router'
 import rateRouter from 'routes/rate.router'
 import orderRouter from 'routes/order.router'
 import userRouter from 'routes/user.router'
+import morgan from 'morgan'
 
 const app = express()
 
@@ -18,6 +19,7 @@ app.use(urlencoded({limit:'50mb', extended:true}))
 app.use(helmet())
 app.use(compression())
 app.use(cookieparser())
+app.use(morgan("tiny"))
 app.use(rateLimit({max:100000,windowMs:1000*15*60}))
 app.use(cors({
     origin: ['http://localhost:5173','https://desinterfaces-bcomponentesfront.onrender.com'],
