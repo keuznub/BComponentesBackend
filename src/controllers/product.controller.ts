@@ -6,6 +6,8 @@ export class ProductController{
 
     static async getAll(req: Request, res:Response, next:NextFunction){
         try{
+            console.log("Cookie en products getALl:");
+            console.log(req.cookies);
             const products = await ProductService.getAll()
             res.status(201).json(products)
         }catch(error){

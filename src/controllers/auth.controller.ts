@@ -23,10 +23,10 @@ export default class AuthController{
             const userData = req.body
             const token = await AuthService.login(userData)
             res.cookie('token',token, {
-                maxAge:60*60*1000,
+                maxAge:60*60*1000*3,
                 httpOnly:true,
-                secure:false,
-                sameSite:"strict"
+                secure: process.env.COOKIE_SECURE?process.env.COOKIE_SECURE==="true":false,
+                sameSite:"none"
             })
             
             const {id,role} : any = jwt.decode(token)

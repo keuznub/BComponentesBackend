@@ -8,6 +8,8 @@ const TOKEN_PASSWORD = process.env.TOKEN_PASSWORD || "pass"
 
 
 export function isAuthenticate(req:Request, res:Response, next:NextFunction){
+    console.log("Cookie en isAuthenticate:");
+    console.log(req.cookies);
     const tokenReceived = req.cookies.token
     if(!tokenReceived) return next(new HttpException(403, "Access Denied"))
     try{
