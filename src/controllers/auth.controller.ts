@@ -25,9 +25,8 @@ export default class AuthController{
             res.cookie('token',token, {
                 maxAge:60*60*1000*3,
                 httpOnly:true,
-                secure: true,
+                secure: false,
                 sameSite:"none",
-                domain:".desinterfaces-exercisebackend.onrender.com"
             })
             
             const {id,role} : any = jwt.decode(token)
