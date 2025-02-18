@@ -105,4 +105,4 @@ app.use("/api/orders", _orderrouter.default);
 app.use("/api/users", _userrouter.default);
 const _default = app;
 
-//# sourceMappingURL=app.js.map
+//# sourceMappingURL=App.js.map
