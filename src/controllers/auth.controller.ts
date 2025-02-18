@@ -22,11 +22,15 @@ export default class AuthController{
         try{
             const userData = req.body
             const token = await AuthService.login(userData)
+            const validSameSiteValues = ["none", "lax", "strict"] as const; // Valores permitidos
+            const sameSiteValue: "none" | "lax" | "strict" = validSameSiteValues.includes(process.env.COOKIE_SAME_SITE as "none" | "lax" | "strict")
+            ? (process.env.COOKIE_SAME_SITE as "none" | "lax" | "strict")
+            : "none"; // Si no es válido, usa "none" por defecto
             res.cookie('token',token, {
                 maxAge:60*60*1000*3,
                 httpOnly:true,
                 secure: process.env.COOKIE_SECURE?process.env.COOKIE_SECURE==="true":false,
-                sameSite:"none",
+                sameSite: sameSiteValue,
             })
             
             const {id,role} : any = jwt.decode(token)
