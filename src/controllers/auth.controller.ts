@@ -25,7 +25,7 @@ export default class AuthController{
             res.cookie('token',token, {
                 maxAge:60*60*1000*3,
                 httpOnly:true,
-                secure: false,
+                secure: process.env.COOKIE_SECURE?process.env.COOKIE_SECURE==="true":false,
                 sameSite:"none",
             })
             
