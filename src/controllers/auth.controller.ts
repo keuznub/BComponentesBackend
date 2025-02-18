@@ -27,7 +27,7 @@ export default class AuthController{
                 httpOnly:true,
                 secure: true,
                 sameSite:"none",
-                domain:"desinterfaces-exercisebackend.onrender.com"
+                domain:".desinterfaces-exercisebackend.onrender.com"
             })
             
             const {id,role} : any = jwt.decode(token)
