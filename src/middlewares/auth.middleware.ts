@@ -11,7 +11,9 @@ export function isAuthenticate(req:Request, res:Response, next:NextFunction){
     console.log("Cookie en isAuthenticate:");
     console.log(req.cookies);
     const tokenReceived = req.cookies.token
-    if(!tokenReceived) return next(new HttpException(403, "Access Denied"))
+    //test error no hay cookies?
+    if(!tokenReceived) return next(new HttpException(403, JSON.stringify(req.cookies)))
+    //if(!tokenReceived) return next(new HttpException(403, "Access Denied"))
     try{
         const tokenDecodificado = jwt.verify(tokenReceived,TOKEN_PASSWORD)
         req.user = tokenDecodificado as CustomJwtPayload
