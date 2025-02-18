@@ -26,7 +26,7 @@ export default class AuthController{
                 maxAge:60*60*1000*3,
                 httpOnly:true,
                 secure: process.env.COOKIE_SECURE?process.env.COOKIE_SECURE==="true":false,
-                sameSite:"strict",
+                sameSite:"none",
             })
             
             const {id,role} : any = jwt.decode(token)
