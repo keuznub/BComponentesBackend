@@ -1,14 +1,15 @@
 import { NextFunction, Request,Response } from "express"
 import { ProductService } from "../services/product.service"
 import { HttpException } from "../exceptions/httpException"
+import { ProductQueryParams } from "@/types/productQueryParams"
 
 export class ProductController{
 
     static async getAll(req: Request, res:Response, next:NextFunction){
         try{
-            console.log("Cookie en products getALl:");
-            console.log(req.cookies);
-            const products = await ProductService.getAll()
+            const query : ProductQueryParams = req.query
+            console.log(query);
+            const products = await ProductService.getAll(query.page,query.name)
             res.status(201).json(products)
         }catch(error){
             next(error)

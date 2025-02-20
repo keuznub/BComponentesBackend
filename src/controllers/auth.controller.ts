@@ -39,7 +39,16 @@ export default class AuthController{
             }catch(error){
                 next(error)
             }
+    }
 
+    static async autoLogin(req: Request, res:Response, next:NextFunction){
+        try{
+            if(!req.user) return
+            const {id, role} = req.user
+            res.status(201).json({message:"AutoLogin sucessfully",id,role})
+            }catch(error){
+                next(error)
+            }
     }
 
     static async logout(req: Request, res:Response, next:NextFunction){

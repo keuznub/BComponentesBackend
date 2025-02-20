@@ -5,8 +5,13 @@ import {prisma} from 'database/adapter'
 
 export class ProductService{
     
-    static async getAll(){
-        const findProducts = await prisma.product.findMany({include:{rates:true,categoryProduct:{include:{category:true}}}})
+    static async getAll(page?:number,name?:string){
+        const PAGE_SIZE = 8 
+        const findProducts = await prisma.product.findMany({include:{rates:true,categoryProduct:{include:{category:true}}},
+            ...(page&&{skip:(page-1)*PAGE_SIZE}),
+            ...(page&&{take:PAGE_SIZE}),
+            ...(name&&{where:{name:{contains:name}}})}
+        )
         if(!findProducts) throw new HttpException(404,"Products not found")
         return findProducts
     }
@@ -20,7 +25,6 @@ export class ProductService{
 
     static async save(product: Product, categoriesId: number[]){        
         return await prisma.product.create({data:{...product,
-            //categoryProduct: {create:[{category:{connect:{id:1}}}]}
             categoryProduct: {create: categoriesId.map(id=>({category:{connect:{id}}}))}
         }})
     }

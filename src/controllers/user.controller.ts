@@ -2,6 +2,8 @@ import { NextFunction, Request,Response } from "express"
 import { ProductService } from "../services/product.service"
 import { HttpException } from "../exceptions/httpException"
 import { UserService } from "../services/user.service"
+import { log } from "console"
+import { prisma } from "@/database/adapter"
 
 export class UserController{
 
@@ -38,12 +40,14 @@ export class UserController{
 
     static async update(req: Request, res:Response, next:NextFunction){
         try{
+            console.log("update solicitado");
+            console.log(req.body);
             const id = Number.parseInt(req.params.id)
             if(isNaN(id)) throw new HttpException(400,"Bad request")
             const user = req.body
             user.id = id
             const result = await UserService.update(user)
-            res.status(201).json(result)
+            res.status(201).json("Updated")
         }catch(error){
             next(error)
         }
