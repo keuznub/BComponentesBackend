@@ -16,13 +16,19 @@ export class OrderService {
         return findOrder
     }
 
+    static async getAllByUserId(idUser: number) {
+        const findOrder = await prisma.order.findMany({ where: { idUser },include:{orderProducts:{include:{product:true}}} })
+        if (!findOrder) throw new HttpException(404, "Orders not found")
+        return findOrder
+    }
 
-    static async save(orderProducts: OrderProduct[], idUser: number) {
+
+    static async save(orderProductsReceived: OrderProduct[], idUser: number) {
         return await prisma.order.create({
             data: {
                 status:"pending",
                 idUser:idUser,
-                orderProducts:{createMany:{data : orderProducts}}
+                orderProducts: {create: orderProductsReceived.map(order=>({product:{connect:{id:order.idProduct}},quantity:order.quantity}))}
             }
         })
     }

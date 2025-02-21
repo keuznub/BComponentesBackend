@@ -9,9 +9,9 @@ export class ProductController{
     static async getAll(req: Request, res:Response, next:NextFunction){
         try{
             const query : ProductQueryParams = req.query
-            console.log(query);
+            
             const products = await ProductService.getAll(query.page,query.name)
-            console.log(products);
+            
             res.status(201).json(products)
         }catch(error){
             next(error)

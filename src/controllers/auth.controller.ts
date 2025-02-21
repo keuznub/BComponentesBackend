@@ -47,7 +47,7 @@ export default class AuthController{
             const {id, role} = req.user
             res.status(201).json({message:"AutoLogin sucessfully",id,role})
             }catch(error){
-                next(error)
+                next()
             }
     }
 

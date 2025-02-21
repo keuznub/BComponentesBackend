@@ -14,19 +14,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Product{
-  id Int @id @unique @default(autoincrement())
-  name String
-  description String?
-  image String
-  price Float
-  discount Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  categoryProduct CategoryProduct[]
-  orders OrderProduct[]
-  rates Rate[]
-}
 
 model User{
   id Int @id @unique @default(autoincrement())
@@ -42,6 +29,20 @@ model User{
   
 }
 
+model Product{
+  id Int @id @unique @default(autoincrement())
+  name String
+  description String?
+  image String
+  price Float
+  discount Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  categoryProduct CategoryProduct[]
+  orderProducts OrderProduct[]
+  rates Rate[]
+}
+
 model Order{
   id Int @id @unique @default(autoincrement())
   idUser Int 
@@ -50,6 +51,17 @@ model Order{
   orderProducts OrderProduct[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+
+model OrderProduct{
+  idProduct Int 
+  product Product @relation(fields: [idProduct], references: [id])
+  idOrder Int
+  order Order @relation(fields: [idOrder],references: [id])
+  quantity Int
+  @@id([idProduct,idOrder])
+
 }
 
 model Category{
@@ -81,13 +93,5 @@ model Rate{
   @@id([idUser,idProduct])
 }
 
-model OrderProduct{
-  idProduct Int 
-  product Product @relation(fields: [idProduct], references: [id])
-  idOrder Int
-  order Order @relation(fields: [idOrder],references: [id])
-  quantity Int
-  @@id([idProduct,idOrder])
 
-}
 
