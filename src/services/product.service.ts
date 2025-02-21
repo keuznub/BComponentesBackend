@@ -8,12 +8,17 @@ export class ProductService{
     static async getAll(page?:number,name?:string){
         const PAGE_SIZE = 8 
         const findProducts = await prisma.product.findMany({include:{rates:true,categoryProduct:{include:{category:true}}},
-            ...(page&&{skip:(page-1)*PAGE_SIZE}),
+            ...(page&&{skip:(page)*PAGE_SIZE}),
             ...(page&&{take:PAGE_SIZE}),
             ...(name&&{where:{name:{contains:name}}})}
         )
+        const productsCount = await prisma.product.count({
+            ...(name&&{where:{name:{contains:name}}})
+        })
+
         if(!findProducts) throw new HttpException(404,"Products not found")
-        return findProducts
+
+        return {products:findProducts,count:productsCount}
     }
 
     static async getById(id: number){

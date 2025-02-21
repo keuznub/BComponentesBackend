@@ -2,6 +2,7 @@ import { NextFunction, Request,Response } from "express"
 import { ProductService } from "../services/product.service"
 import { HttpException } from "../exceptions/httpException"
 import { ProductQueryParams } from "@/types/productQueryParams"
+import { log } from "console"
 
 export class ProductController{
 
@@ -10,6 +11,7 @@ export class ProductController{
             const query : ProductQueryParams = req.query
             console.log(query);
             const products = await ProductService.getAll(query.page,query.name)
+            console.log(products);
             res.status(201).json(products)
         }catch(error){
             next(error)
