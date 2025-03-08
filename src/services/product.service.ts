@@ -5,15 +5,22 @@ import {prisma} from 'database/adapter'
 
 export class ProductService{
     
-    static async getAll(page?:number,name?:string){
+    static async getAll(page?:number,name?:string,categoryName?:string){
         const PAGE_SIZE = 8 
         const findProducts = await prisma.product.findMany({include:{rates:true,categoryProduct:{include:{category:true}}},
             ...(page&&{skip:(page)*PAGE_SIZE}),
             ...(page&&{take:PAGE_SIZE}),
-            ...(name&&{where:{name:{contains:name}}})}
+                where:{
+            ...(name&&{name:{contains:name}}),
+            ...(categoryName&&{categoryProduct:{some:{category:{name:categoryName}}}})},
+            
+        }
+
         )
         const productsCount = await prisma.product.count({
-            ...(name&&{where:{name:{contains:name}}})
+            where:{
+                ...(name&&{name:{contains:name}}),
+                ...(categoryName&&{categoryProduct:{some:{category:{name:categoryName}}}})},
         })
 
         if(!findProducts) throw new HttpException(404,"Products not found")
