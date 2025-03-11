@@ -44,14 +44,20 @@ export class ProductService{
     static async delete(id: number){
         const findProduct = await prisma.product.findUnique({where:{id}})
         if(!findProduct) throw new HttpException(404,"Product not found")
+        await prisma.categoryProduct.deleteMany({where:{idProduct:id}})
+        await prisma.orderProduct.deleteMany({where:{idProduct:id}})
+        await prisma.rate.deleteMany({where:{idProduct:id}})
+        await prisma.order.deleteMany({where:{orderProducts:{none: { idProduct: { not: undefined } }}}})
         return await prisma.product.delete({where:{id}})
     }
 
-    static async update(product: Product){
-        const {id} = product
+    static async update(id:number,product: Product, categoriesId: number[]){
         const findProduct = await prisma.product.findUnique({where:{id}})
         if(!findProduct) throw new HttpException(404,"Product not found")
-        return await prisma.product.update({where:{id},data:{...product}})
+            return await prisma.product.update({where:{id} ,data:{...product,
+                categoryProduct: {deleteMany:{},create: categoriesId.map(id=>({category:{connect:{id}}}))},
+                rates:{}
+            }})
     }
 
 

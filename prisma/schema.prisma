@@ -55,10 +55,10 @@ model Order{
 
 
 model OrderProduct{
-  idProduct Int 
-  product Product @relation(fields: [idProduct], references: [id])
+  idProduct Int
+  product Product @relation(fields: [idProduct], references: [id], onDelete: Cascade)
   idOrder Int
-  order Order @relation(fields: [idOrder],references: [id])
+  order Order @relation(fields: [idOrder],references: [id], onDelete: Cascade)
   quantity Int
   @@id([idProduct,idOrder])
 
@@ -68,16 +68,16 @@ model Category{
   id Int @id @unique @default(autoincrement())
   name String 
   color String?
-  categoryProduct CategoryProduct[]
+  categoryProduct CategoryProduct[] 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model CategoryProduct{
   idProduct Int
-  product Product @relation(fields: [idProduct], references: [id])
+  product Product @relation(fields: [idProduct], references: [id], onDelete: Cascade)
   idCategory Int
-  category Category @relation(fields: [idCategory], references: [id])
+  category Category @relation(fields: [idCategory], references: [id], onDelete: Cascade)
   @@id([idProduct,idCategory])
 }
 
