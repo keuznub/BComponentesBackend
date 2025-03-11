@@ -41,6 +41,7 @@ export class ProductService{
         }})
     }
 
+    //Hay que probar a poner la ultima migracion en turso para ver si funciona el cascade en vez de hacer esta parafernalia
     static async delete(id: number){
         const findProduct = await prisma.product.findUnique({where:{id}})
         if(!findProduct) throw new HttpException(404,"Product not found")
